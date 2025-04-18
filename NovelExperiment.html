@@ -5,7 +5,7 @@
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-fullscreen@2.1.0"></script>
     <link href="https://unpkg.com/jspsych@8.2.0/css/jspsych.css" rel="stylesheet" type="text/css" />
-    <script src="src/circle-click.js"></script>
+    <script src="NovelExperiment/plugin-circle-click-task/src/circle-click.js"></script>
     <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
   </head>
   <body ID="background">
@@ -81,7 +81,9 @@
     /* Slide 10: Circle click task */
     //20 trials each
     
-    let practiceTrialCounter = [2,2,2,2,2];
+    //the 2 trial can start before the delay and cut into it currently
+
+    let practiceTrialCounter = [1,2,3];
 
     let trialCounter = 
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
