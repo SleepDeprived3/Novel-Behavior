@@ -5,7 +5,6 @@ var jsPsychCircleClickTask = (function (jspsych) {
     name: "circle-click",
     version: "0.0.1",
     parameters: {
-      /** Parameter template */
       starting_score: {
         type: jspsych.ParameterType.INT,
         default: 0,
@@ -16,7 +15,6 @@ var jsPsychCircleClickTask = (function (jspsych) {
       },
     },
     data: {
-      /** Provide a clear description of the data1 that could be used as documentation. We will eventually use these comments to automatically build documentation and produce metadata. */
       final_score: {
         type: jspsych.ParameterType.INT,
       }, 
@@ -26,34 +24,23 @@ var jsPsychCircleClickTask = (function (jspsych) {
     },
   };
 
-  /**
-   * **plugin-cicle-click-task**
-   *
-   * A plugin that creates circles on the screen which add to a cumulative score when clicked
-   *
-   * @author James Hatch
-   * @see {@link /plugin-cicle-click-task/README.md}
-   */
   class CircleClickTaskPlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
     }
     trial(display_element, trial) {
-      //establishing non-exported variables
       const numCircles = 10;
-      const trialDuration = 15000; // 15 seconds
+      const trialDuration = 15000; // 15s
       let circles = [];
       let trialRunning = true;
       let score = trial.starting_score || 0;
       let redDotShown = false;
       let redDotClicked = false;
 
-      var trial_data = {
-        //establishing variables to export
+      const trial_data = {
         final_score: 0, 
       };
 
-      // Set up score display
       const scoreCounter = document.createElement("div");
       scoreCounter.style.position = "fixed";
       scoreCounter.style.top = "20px";
@@ -63,7 +50,6 @@ var jsPsychCircleClickTask = (function (jspsych) {
       scoreCounter.innerText = "Score: 0";
       display_element.appendChild(scoreCounter);
 
-      // Get a random position
       function getRandomPosition() {
         const padding = 60;
         const x = Math.random() * (window.innerWidth - padding);
@@ -71,17 +57,14 @@ var jsPsychCircleClickTask = (function (jspsych) {
         return { x, y };
       }
 
-      //disable mouse cursor
       function disableMouse() {
-        document.body.style.pointerEvents = "none";
-      }
-      
-      //enable mouse cursor
-      function enableMouse() {
-        document.body.style.pointerEvents = "auto";
+        display_element.style.pointerEvents = "none";
       }
 
-      // Create a single clickable circle
+      function enableMouse() {
+        display_element.style.pointerEvents = "auto";
+      }
+
       function createCircle() {
         const pos = getRandomPosition();
         const circle = document.createElement("div");
@@ -102,16 +85,15 @@ var jsPsychCircleClickTask = (function (jspsych) {
           scoreCounter.innerText = `Score: ${score}`;
           createCircle();
         });
-        
+
         display_element.appendChild(circle);
         circles.push(circle);
       }
 
-      // Mouse Disruption Tools
+      // --- Mouse Disruption Setup ---
       let fakeCursor;
       let lastMouseX = 0;
       let lastMouseY = 0;
-
 
       function trackMouse(e) {
         lastMouseX = e.clientX;
@@ -122,7 +104,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
         }
       }
 
-      function freezeMouse(e) {
+      function freezeMouse() {
         if (fakeCursor) {
           fakeCursor.style.left = `${lastMouseX}px`;
           fakeCursor.style.top = `${lastMouseY}px`;
@@ -141,17 +123,12 @@ var jsPsychCircleClickTask = (function (jspsych) {
         fakeCursor.style.left = "0px"; 
         fakeCursor.style.top = "0px"; 
         document.body.appendChild(fakeCursor);
-        
-        // Add global style to hide the cursor
+
         const style = document.createElement("style");
         style.id = "hide-cursor-style";
-        style.innerHTML = `
-          html, body, * {
-            cursor: none !important;
-          }
-        `;
+        style.innerHTML = `html, body, * { cursor: none !important; }`;
         document.head.appendChild(style);
-      
+
         document.addEventListener("mousemove", trackMouse);
       }
 
@@ -167,60 +144,71 @@ var jsPsychCircleClickTask = (function (jspsych) {
 
       function removeFakeCursor() {
         document.body.style.cursor = "auto";
-        
-        // Remove global cursor hiding style
         const style = document.getElementById("hide-cursor-style");
         if (style) style.remove();
-      
-        // Remove the fake cursor div
-        if (fakeCursor && fakeCursor.parentNode) {
-          fakeCursor.parentNode.removeChild(fakeCursor);
-        }
-      
+        if (fakeCursor && fakeCursor.parentNode) fakeCursor.parentNode.removeChild(fakeCursor);
         document.removeEventListener("mousemove", trackMouse);
         document.removeEventListener("mousemove", freezeMouse);
       }
 
-      function disableMouse() {
-        display_element.style.pointerEvents = "none";
-      }
-
-      function enableMouse() {
-        display_element.style.pointerEvents = "auto";
-      }
-
-      if (trial.mouse_disruption_type >= 1) {
-        console.log("Setting up fake cursor");
-        setupFakeCursor();
-      }
+      setupFakeCursor();
 
       for (let i = 0; i < numCircles; i++) {
         createCircle();
       }
 
+      // --- Red Dot + Disruption Timing ---
+      const redDotDelay = Math.random() * (trialDuration - 3250) + 1250;
 
-      // delay of 2.5 seconds (starts 1.25 seconds before the red dot)
-      // red dot shows up for 2 seconds
-      // red dot can appear between +1.25 from the start and -2 seconds before the end
-      // delay can occur from the start to -3.5 seconds from the end
+      if (trial.mouse_disruption_type === 3) {
+        const disruptionStart = redDotDelay - 1500;
+        if (disruptionStart >= 0) {
+          jsPsych.pluginAPI.setTimeout(() => {
+            lockMouseMovement();
+            disableMouse();
+            jsPsych.pluginAPI.setTimeout(() => {
+              unlockMouseMovement();
+              enableMouse();
+            }, 2500);
+          }, disruptionStart);
+        }
+      }
 
-      //time that the red dot can occur
-      const redDotDelay = ((Math.random() * 12250) + 1250);
+      if (trial.mouse_disruption_type === 2) {
+        const disruptionDuration = 2500;
+        const disruptionBufferBeforeRedDot = 2500;
+        const disruptionBufferAfterRedDot = 2000;
+        const latestAllowedDisruption = trialDuration - disruptionDuration;
 
-      const showRedDot = () => {
-        if (!trialRunning) return;
-        redDotShown = true;
+        let disruptionTime;
+        let attempts = 0;
+        const maxAttempts = 100;
 
-        //time of the delay
-        if (trial.mouse_disruption_type == 3) {
+        do {
+          disruptionTime = Math.random() * latestAllowedDisruption;
+          attempts++;
+        } while (
+          attempts < maxAttempts &&
+          (
+            (disruptionTime >= redDotDelay - disruptionBufferBeforeRedDot &&
+             disruptionTime <= redDotDelay + disruptionBufferAfterRedDot) ||
+            (disruptionTime + disruptionDuration > trialDuration)
+          )
+        );
+
+        jsPsych.pluginAPI.setTimeout(() => {
           lockMouseMovement();
           disableMouse();
-          setTimeout(() => {
+          jsPsych.pluginAPI.setTimeout(() => {
             unlockMouseMovement();
             enableMouse();
-          }, redDotDelay - 1250);
-        }
+          }, disruptionDuration);
+        }, disruptionTime);
+      }
 
+      function showRedDot() {
+        if (!trialRunning) return;
+        redDotShown = true;
         const pos = getRandomPosition();
         const redDot = document.createElement("div");
         redDot.style.position = "absolute";
@@ -240,65 +228,41 @@ var jsPsychCircleClickTask = (function (jspsych) {
 
         display_element.appendChild(redDot);
 
-        //time that the dot is on the screen
         jsPsych.pluginAPI.setTimeout(() => {
           if (!redDotClicked && redDot.parentNode) {
             display_element.removeChild(redDot);
             score = 0;
             scoreCounter.innerText = `Score: ${score}`;
           }
-        }, 2000);
-      };
+        }, 1500);
+      }
 
       jsPsych.pluginAPI.setTimeout(showRedDot, redDotDelay);
 
-      //time of the delay, time the dot is on the screen
-      if (trial.mouse_disruption_type == 2) {
-        let disruptionTime;
-        do {
-          disruptionTime = Math.random() * trialDuration;
-        } while (disruptionTime >= redDotDelay - 1250 && disruptionTime <= redDotDelay + 3500);
-
-        jsPsych.pluginAPI.setTimeout(() => {
-          lockMouseMovement();
-          disableMouse();
-          setTimeout(() => {
-            unlockMouseMovement();
-            enableMouse();
-          }, 2500);
-        }, disruptionTime);
-      }
-
       jsPsych.pluginAPI.setTimeout(() => {
         trialRunning = false;
-
         for (let circle of circles) {
-          if (circle.parentNode) {
-            display_element.removeChild(circle);
-          }
+          if (circle.parentNode) display_element.removeChild(circle);
         }
         circles = [];
-
         removeFakeCursor();
 
-        // Show final score
         display_element.innerHTML = `
           <div style="text-align:center; font-size:40px; padding-top:20vh;">
             Final Score: ${score}
           </div>
         `;
 
-         // Wait a moment before ending the trial (optional)  
         jsPsych.pluginAPI.setTimeout(() => {
           trial_data.final_score = score;
           trial_data.red_dot_clicked = redDotClicked;
           this.jsPsych.finishTrial(trial_data);
-        }, 2000); // 2 second delay to show final score
+        }, 2000);
 
       }, trialDuration);
     }
   }
-  CircleClickTaskPlugin.info = info
-  
+
+  CircleClickTaskPlugin.info = info;
   return CircleClickTaskPlugin;
 })(jsPsychModule);
