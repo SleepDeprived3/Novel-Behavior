@@ -169,14 +169,14 @@ var jsPsychCircleClickTask = (function (jspsych) {
             jsPsych.pluginAPI.setTimeout(() => {
               unlockMouseMovement();
               enableMouse();
-            }, 2500);
+            }, 2000);
           }, disruptionStart);
         }
       }
 
       if (trial.mouse_disruption_type === 2) {
-        const disruptionDuration = 2500;
-        const disruptionBufferBeforeRedDot = 2500;
+        const disruptionDuration = 2000;
+        const disruptionBufferBeforeRedDot = 2000;
         const disruptionBufferAfterRedDot = 2000;
         const latestAllowedDisruption = trialDuration - disruptionDuration;
 
