@@ -249,7 +249,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
 
         display_element.innerHTML = `
           <div style="text-align:center; font-size:40px; padding-top:20vh;">
-            Final Score: ${score}
+            Current Score: ${score}
           </div>
         `;
 
