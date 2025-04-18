@@ -1,0 +1,168 @@
+<html>
+  <head>
+    <title>Novel Experiment</title>
+    <script src="https://unpkg.com/jspsych@8.2.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-fullscreen@2.1.0"></script>
+    <link href="https://unpkg.com/jspsych@8.2.0/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="NovelExperiment/plugin-circle-click-task/src/circle-click.js"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+  </head>
+  <body ID="background">
+  </body>
+  <script>
+    //initializes the timeline
+    var jsPsych = initJsPsych();
+    var timeline = [];
+    
+    //Experimenter slides:
+     var fullscreen = {
+        type: jsPsychFullscreen,
+        fullscreen_mode: true
+    };
+    timeline.push(fullscreen);
+
+    //Seting up the participant data
+    const subject_id = jsPsych.randomization.randomID(10);
+    const filename = `${subject_id}.csv`;
+            
+    /* Slide 1: Introduction 1 */
+    var introduction1 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Introduction</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">Your goal is to build your score by clicking on as many green circles on the screen as possible within 15-second intervals. Use your dominant hand’s pointer finger to move your cursor across the and click on the circles.  For each circle you click, you will gain one point, which will be added to your score at the upper-right corner of your screen. This point total will be cumulative, meaning that points collected during one trial will continue over to future trials. As the clicked circles disappear, more circles will appear in random positions across the screen. Continue clicking on circles and earning points until the 15-second interval has completed.</p><div><div style="bottom:170px; right:48%; position:fixed; border:3px solid black; width:300px; height:200px;"></div><h1 style="font-size:45px; position:absolute; bottom:34%; left:49%">0</h1><div style="height:80px; width:80px; border-radius:50%; position:fixed; bottom:200px; right:58%; background-color:#6aa84f; display: inline-block;"></div><p style="position:absolute; top:650px; left:832px;">(The green circle and the score counter)</p><div><p style="font-size:20px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
+      post_trial_gap: 1000
+    };
+    timeline.push(introduction1);
+
+    /* Slide 2: Introduction 2 */
+    var introduction2 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Introduction</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:25px">At some point during each 15-second interval, a red circle will appear briefly on the screen. If this circle is not clicked within __ seconds, the red circle will disappear and your cumulative score will be reduced to 0. If the circle is clicked before it can disappear, your cumulative score will not be decreased. </p><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">You may not have complete control over the mouse’s movement during some trials. Try your best and continue clicking on the circles.</p><div><div style="bottom:170px; right:48%; position:fixed; border:3px solid black; width:300px; height:200px;"></div><h1 style="font-size:45px; position:absolute; bottom:34%; left:49%">0</h1><div style="height:80px; width:80px; border-radius:50%; position:fixed; bottom:200px; right:58%; background-color:#6aa84f; display: inline-block;"></div><div style="height:80px; width:80px; border-radius:50%; position:fixed; top:620px; right:52%; background-color:#cc0000ff; display: inline-block;"></div><p style="position:absolute; top:620px; left:832px;">(The red circle)</p><div><p style="font-size:20px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
+      post_trial_gap: 1000
+    };
+    timeline.push(introduction2);
+
+    /* Slide 3: Introduction 3 */
+    var introduction3 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Introduction</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">After each trial, you will be told to rate how much control you believe you had over the mouse during the trial. The rating will be on a scale of 1 (no control) to 5 (complete control). Submit your rating by hitting the respective number on the number row of your keyboard.</p><div style="display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-around; width:100%"><p style="font-size:35px">1</p><p style="font-size:35px">2</p><p style="font-size:35px">3</p><p style="font-size:35px">4</p><p style="font-size:35px">5</p></div><div style="bottom:300px; right:75px; position:fixed; border:2px solid black; width:88%; height:0px; margin:20px;"></div><p style="font-size:20px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
+      post_trial_gap: 1000
+    };
+    timeline.push(introduction3);
+
+    /* Slide 4: Introduction 4 */
+    var introduction4 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Introduction</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">You are about to begin three, 15-second practice trials. Use this time to familiarize yourself with the interface and the scoring system.</p><p style="font-size:40px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
+      post_trial_gap: 1000
+    };
+    timeline.push(introduction4);
+
+    /* Slide 5: Introduction 5 */
+    var introduction5 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Introduction</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">You are about to begin a 60 trial testing period.</p><p style="font-size:40px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
+      post_trial_gap: 1000
+    };
+
+    /* Slide 5: Rating */
+    var rating = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: ['1', '2', '3', '4', '5'],
+      stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Rating</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">Rate how much control you believe you had over the mouse during the trial from 1 (no control) to 5 (complete control).</p><div style="display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-around; width:1200px"><p style="font-size:35px">1</p><p style="font-size:35px">2</p><p style="font-size:35px">3</p><p style="font-size:35px">4</p><p style="font-size:35px">5</p></div><div style="bottom:300px; right:75px; position:fixed; border:2px solid black; width:88%; height:0px; margin:20px;"></div></div>`,
+      post_trial_gap: 1000
+    };
+    
+    /* Slide 10: Circle click task */
+    //20 trials each
+    
+    let practiceTrialCounter = [2,2,2,2,2];
+
+    let trialCounter = 
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+    3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3];
+
+    const practiceTrialOrder = [];
+    const trialOrder = [];
+
+    let lastScore = 0;
+    var circleTask1 = {
+      type: jsPsychCircleClickTask,
+      mouse_disruption_type: 1,
+      starting_score: () => lastScore,  
+      on_finish: function(data) {
+        lastScore = data.final_score;
+      },
+    };
+    var circleTask2 = {
+      type: jsPsychCircleClickTask,
+      mouse_disruption_type: 2,
+      starting_score: () => lastScore,  
+      on_finish: function(data) {
+        lastScore = data.final_score;
+      },
+    };
+    var circleTask3 = {
+      type: jsPsychCircleClickTask,
+      mouse_disruption_type: 3,
+      starting_score: () => lastScore,  
+      on_finish: function(data) {
+        lastScore = data.final_score;
+      },
+    };
+
+    while (practiceTrialCounter.length > 0) {
+      let selectedIndex = Math.floor(Math.random() * practiceTrialCounter.length);
+      selectedIndexValue = practiceTrialCounter[selectedIndex];
+      practiceTrialCounter.splice(selectedIndex, 1);
+      if (selectedIndexValue == 1) {
+        practiceTrialOrder.push(circleTask1);
+        practiceTrialOrder.push(rating);
+      } else if (selectedIndexValue == 2) {
+        practiceTrialOrder.push(circleTask2);
+        practiceTrialOrder.push(rating);
+      } else if (selectedIndexValue == 3) {
+        practiceTrialOrder.push(circleTask3);
+        practiceTrialOrder.push(rating);
+      }
+    }
+
+    while (trialCounter.length > 0) {
+      let selectedIndex = Math.floor(Math.random() * trialCounter.length);
+      selectedIndexValue = trialCounter[selectedIndex];
+      trialCounter.splice(selectedIndex, 1);
+      if (selectedIndexValue == 1) {
+        trialOrder.push(circleTask1);
+        trialOrder.push(rating);
+      } else if (selectedIndexValue == 2) {
+        trialOrder.push(circleTask2);
+        trialOrder.push(rating);
+      } else if (selectedIndexValue == 3) {
+        trialOrder.push(circleTask3);
+        trialOrder.push(rating);
+      }
+    }
+    timeline.push(practiceTrialOrder);
+    timeline.push(introduction5);
+    timeline.push(trialOrder);
+
+    const save_data = {
+      type: jsPsychPipe,
+      action: "save",
+      experiment_id: "LNAcJki2n0WK",
+      filename: filename,
+      data_string: ()=>jsPsych.data.get().csv()
+    };
+    timeline.push(save_data);
+    
+    jsPsych.run(timeline);
+    
+
+  </script>
+</html> 
