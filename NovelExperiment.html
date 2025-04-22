@@ -15,22 +15,30 @@
     var jsPsych = initJsPsych();
     var timeline = [];
 
+    // capture info from Prolific
+    var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+    var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+    const filename = `${subject_id}.csv`;
+
+    jsPsych.data.addProperties({
+      subject_id: subject_id,
+      study_id: study_id,
+      session_id: session_id
+    });
+
     //Experimenter slides:
      var fullscreen = {
         type: jsPsychFullscreen,
         fullscreen_mode: true
     };
-    timeline.push(fullscreen);
-
-    //Seting up the participant data
-    const subject_id = jsPsych.randomization.randomID(10);
-    const filename = `${subject_id}.csv`;
+    timeline.push(fullscreen);    
             
     /* Slide 1: Introduction 1 */
     var introduction1 = {
       type: jsPsychHtmlKeyboardResponse,
       choices: [' '],
-      stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Instructions</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">Your goal is to build your score by clicking on as many green circles on the screen as possible within 15-second intervals. Use your dominant hand to move your cursor across the and click on the circles.  For each circle you click, you will gain one point, which will be added to your score at the upper-right corner of your screen. This point total will be cumulative, meaning that points collected during one trial will continue over to future trials. As the clicked circles disappear, more circles will appear in random positions across the screen. Continue clicking on circles and earning points until the 15-second interval has completed.</p><div><div style="bottom:170px; right:48%; position:fixed; border:3px solid black; width:300px; height:200px;"></div><h1 style="font-size:45px; position:absolute; bottom:34%; left:49%">0</h1><div style="height:80px; width:80px; border-radius:50%; position:fixed; bottom:200px; right:58%; background-color:#6aa84f; display: inline-block;"></div><div><p style="font-size:20px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
+      stimulus: `<div style="display: flex; flex-direction: column; align-items: center; padding: 100px 100px 100px 100px;"><h1 style="font-size: 25px; text-align: left; align-self: flex-start;">Instructions</h1><p style="font-size: 16px; text-align: justify;">Your goal is to build your score by clicking on as many green circles on the screen as possible within 15-second intervals. Use your dominant hand to move your cursor across the and click on the circles. For each circle you click, you will gain one point, which will be added to your score at the upper-right corner of your screen. This point total will be cumulative, meaning that points collected during one trial will continue over to future trials. As the clicked circles disappear, more circles will appear in random positions across the screen. Continue clicking on circles and earning points until the 15-second interval has completed.</p><div style="display: flex; justify-content: center; align-items: center; margin-top: 80px;"><div style="border: 3px solid black; width: 300px; height: 200px; position: relative; display: flex; justify-content: center; align-items: center;"><h1 style="font-size: 45px; position: absolute; top: 10px; right: 15px;">0</h1><div style="height: 80px; width: 80px; border-radius: 50%; background-color: #6aa84f;"></div></div></div><p style="font-size: 20px; color: #6aa84f; padding-top: 50px; text-align: center;">Press (spacebar) to continue</p></div>`,
       post_trial_gap: 1000
     };
     timeline.push(introduction1);
@@ -39,7 +47,7 @@
     var introduction2 = {
       type: jsPsychHtmlKeyboardResponse,
       choices: [' '],
-      stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Instructions</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:25px">At some point during each 15-second interval, a red circle will appear briefly on the screen. If this circle is not clicked within 2 seconds, the red circle will disappear and your cumulative score will be reduced to 0. If the circle is clicked before it disappears, your cumulative score will not decrease. </p><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">You may not have complete control over the mouse’s movement during some trials. Try your best and continue clicking on the circles.</p><div><div style="bottom:170px; right:48%; position:fixed; border:3px solid black; width:300px; height:200px;"></div><h1 style="font-size:45px; position:absolute; bottom:34%; left:49%">0</h1><div style="height:80px; width:80px; border-radius:50%; position:fixed; bottom:200px; right:58%; background-color:#6aa84f; display: inline-block;"></div><div style="height:80px; width:80px; border-radius:50%; position:fixed; top:620px; right:52%; background-color:#cc0000ff; display: inline-block;"></div><div><p style="font-size:20px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
+      stimulus: `<div style="display: flex; flex-direction: column; align-items: center; padding: 100px 100px 100px 100px;"><h1 style="font-size: 25px; text-align: left; align-self: flex-start;">Instructions</h1><p style="font-size: 16px; text-align: justify;">At some point during each 15-second interval, a red circle will appear briefly on the screen. If this circle is not clicked within 2 seconds, the red circle will disappear and your cumulative score will be reduced to 0. If the circle is clicked before it disappears, your cumulative score will not decrease.</p><p style="font-size: 16px; text-align: justify;">You may not have complete control over the mouse’s movement during some trials. Try your best and continue clicking on the circles.</p><div style="display: flex; justify-content: center; align-items: center; margin-top: 80px;"><div style="border: 3px solid black; width: 300px; height: 200px; position: relative; display: flex; justify-content: center; align-items: center;"><h1 style="font-size: 45px; position: absolute; top: 10px; right: 15px;">0</h1><div style="height: 80px; width: 80px; border-radius: 50%; background-color: #6aa84f; margin-right: 10px;"></div><div style="height: 80px; width: 80px; border-radius: 50%; background-color: #cc0000; margin-left: 10px;"></div></div></div><p style="font-size: 20px; color: #6aa84f; padding-top: 50px; text-align: center;">Press (spacebar) to continue</p></div>`,
       post_trial_gap: 1000
     };
     timeline.push(introduction2);
@@ -67,7 +75,10 @@
       type: jsPsychHtmlKeyboardResponse,
       choices: [' '],
       stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Instructions</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">You are about to begin a 60 trial testing period.</p><p style="font-size:40px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
-      post_trial_gap: 1000
+      post_trial_gap: 1000,
+      on_finish: function() {
+        lastScore = 0;  // Reset the score here
+      }
     };
 
      /* Slide 6: Rating */
@@ -81,10 +92,8 @@
     /* Slide 10: Circle click task */
     //20 trials each
     
-    //the 2 trial can start before the delay and cut into it currently
-
     let practiceTrialCounter = [1,2,3];
-
+    
     let trialCounter = 
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
     2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
@@ -150,9 +159,9 @@
         trialOrder.push(rating);
       }
     }
+
     timeline.push(practiceTrialOrder);
     timeline.push(introduction5);
-    lastScore = 0;
     timeline.push(trialOrder);
 
     const save_data = {
@@ -164,8 +173,21 @@
     };
     timeline.push(save_data);
     
-    jsPsych.run(timeline);
-    
 
+    //prolific integration
+    var final_trial = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `<p>You've finished the last task. Thanks for participating!</p>
+      <p><a href="https://app.prolific.co/submissions/complete?cc=CE2SA3OI">Click here to return to Prolific and complete the study</a>.</p>`,
+      choices: "NO_KEYS"
+    }
+    timeline.push(final_trial)
+
+    jsPsych.run(timeline);
+  
   </script>
 </html> 
+
+
+
+
