@@ -21,6 +21,9 @@ var jsPsychCircleClickTask = (function (jspsych) {
       red_dot_clicked: {
         type: jspsych.ParameterType.BOOL,
       },
+      disruption_type: {
+        type: jspsych.ParameterType.INT,
+      },
     },
   };
 
@@ -75,7 +78,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
         circle.style.backgroundColor = "#6aa84f";
         circle.style.left = `${pos.x}px`;
         circle.style.top = `${pos.y}px`;
-        circle.style.cursor = "pointer";
+        //circle.style.cursor = "pointer";
 
         circle.addEventListener("click", () => {
           if (!trialRunning) return;
@@ -123,12 +126,24 @@ var jsPsychCircleClickTask = (function (jspsych) {
         fakeCursor.style.left = "0px"; 
         fakeCursor.style.top = "0px"; 
         document.body.appendChild(fakeCursor);
-
-        const style = document.createElement("style");
-        style.id = "hide-cursor-style";
-        style.innerHTML = `html, body, * { cursor: none !important; }`;
-        document.head.appendChild(style);
-
+      
+        let style = document.getElementById("hide-cursor-style");
+        if (!style) {
+          style = document.createElement("style");
+          style.id = "hide-cursor-style";
+          document.head.appendChild(style);
+        }
+      
+        style.innerHTML = `
+          html, body, * {
+            cursor: none !important;
+          }
+      
+          ::-webkit-scrollbar {
+            display: none;
+          }
+        `;
+      
         document.addEventListener("mousemove", trackMouse);
       }
 
@@ -218,7 +233,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
         redDot.style.backgroundColor = "#cc0000";
         redDot.style.left = `${pos.x}px`;
         redDot.style.top = `${pos.y}px`;
-        redDot.style.cursor = "pointer";
+        //redDot.style.cursor = "pointer";
 
         redDot.addEventListener("click", () => {
           if (!trialRunning) return;
@@ -256,6 +271,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
         jsPsych.pluginAPI.setTimeout(() => {
           trial_data.final_score = score;
           trial_data.red_dot_clicked = redDotClicked;
+          trial_data.disruption_type = trial.mouse_disruption_type;
           this.jsPsych.finishTrial(trial_data);
         }, 2000);
 
