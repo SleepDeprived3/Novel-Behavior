@@ -97,17 +97,47 @@ var jsPsychCircleClickTask = (function (jspsych) {
       let fakeCursor;
       let lastMouseX = 0;
       let lastMouseY = 0;
-
-      function trackMouse(e) {
+      let isMouseLocked = false;
+      let isMovementFrozen = false;
+      
+      // Track all event listeners for proper cleanup
+      const eventListeners = [];
+      
+      // Track initial mouse position
+      function captureInitialMousePosition(e) {
         lastMouseX = e.clientX;
         lastMouseY = e.clientY;
-        if (fakeCursor) {
-          fakeCursor.style.left = `${lastMouseX}px`;
-          fakeCursor.style.top = `${lastMouseY}px`;
-        }
+      }
+      
+      // Add event listener to capture initial mouse position before setting up fake cursor
+      addEventListenerWithTracking(document, "mousemove", captureInitialMousePosition);
+      
+      function addEventListenerWithTracking(element, eventType, handler) {
+        element.addEventListener(eventType, handler);
+        eventListeners.push({ element, eventType, handler });
+      }
+      
+      function removeAllEventListeners() {
+        eventListeners.forEach(({ element, eventType, handler }) => {
+          element.removeEventListener(eventType, handler);
+        });
+        eventListeners.length = 0;
       }
 
-      function freezeMouse() {
+      function trackMouse(e) {
+        if (isMovementFrozen) return;
+
+        if (isMouseLocked) {
+          lastMouseX += e.movementX;
+          lastMouseY += e.movementY;
+        } else {
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+        }
+
+        lastMouseX = Math.max(0, Math.min(window.innerWidth, lastMouseX));
+        lastMouseY = Math.max(0, Math.min(window.innerHeight, lastMouseY));
+
         if (fakeCursor) {
           fakeCursor.style.left = `${lastMouseX}px`;
           fakeCursor.style.top = `${lastMouseY}px`;
@@ -115,6 +145,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
       }
 
       function setupFakeCursor() {
+        // Create the fake cursor with initial mouse position
         fakeCursor = document.createElement("div");
         fakeCursor.style.position = "fixed";
         fakeCursor.style.width = "20px";
@@ -123,8 +154,8 @@ var jsPsychCircleClickTask = (function (jspsych) {
         fakeCursor.style.borderRadius = "50%";
         fakeCursor.style.zIndex = "9999";
         fakeCursor.style.pointerEvents = "none";
-        fakeCursor.style.left = "0px"; 
-        fakeCursor.style.top = "0px"; 
+        fakeCursor.style.left = `${lastMouseX}px`; 
+        fakeCursor.style.top = `${lastMouseY}px`; 
         document.body.appendChild(fakeCursor);
       
         let style = document.getElementById("hide-cursor-style");
@@ -144,17 +175,61 @@ var jsPsychCircleClickTask = (function (jspsych) {
           }
         `;
       
-        document.addEventListener("mousemove", trackMouse);
+        // Remove the initial position tracker and set up the main tracker
+        document.removeEventListener("mousemove", captureInitialMousePosition);
+        // Update the eventListeners array to remove the initial tracker
+        for (let i = 0; i < eventListeners.length; i++) {
+          if (eventListeners[i].handler === captureInitialMousePosition) {
+            eventListeners.splice(i, 1);
+            break;
+          }
+        }
+        
+        addEventListenerWithTracking(document, "mousemove", trackMouse);
+        addEventListenerWithTracking(document, 'pointerlockchange', pointerLockChangeHandler);
+        addEventListenerWithTracking(document, 'pointerlockerror', pointerLockErrorHandler);
+        addEventListenerWithTracking(document, 'click', simulateClickAtCursor);
+
+        display_element.requestPointerLock();
+      }
+  
+      function pointerLockChangeHandler() {
+        if (document.pointerLockElement === display_element) {
+          isMouseLocked = true;
+        } else {
+          isMouseLocked = false;
+        }
+      }
+      
+      function pointerLockErrorHandler() {
+        console.warn("Pointer lock failed");
       }
 
       function lockMouseMovement() {
-        document.removeEventListener("mousemove", trackMouse);
-        document.addEventListener("mousemove", freezeMouse);
+        isMovementFrozen = true;
       }
 
       function unlockMouseMovement() {
-        document.removeEventListener("mousemove", freezeMouse);
-        document.addEventListener("mousemove", trackMouse);
+        isMovementFrozen = false;
+      }
+
+      // Add a click simulation for circles and red dot when pointer is locked
+      function simulateClickAtCursor() {
+        if(!isMouseLocked) return;
+
+        // Create a click event at the cursor position
+        const clickEvent = new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          clientX: lastMouseX,
+          clientY: lastMouseY
+        });
+        
+        // Find element at cursor position
+        const elementAtPoint = document.elementFromPoint(lastMouseX, lastMouseY);
+        if (elementAtPoint) {
+          elementAtPoint.dispatchEvent(clickEvent);
+        }
       }
 
       function removeFakeCursor() {
@@ -162,8 +237,14 @@ var jsPsychCircleClickTask = (function (jspsych) {
         const style = document.getElementById("hide-cursor-style");
         if (style) style.remove();
         if (fakeCursor && fakeCursor.parentNode) fakeCursor.parentNode.removeChild(fakeCursor);
-        document.removeEventListener("mousemove", trackMouse);
-        document.removeEventListener("mousemove", freezeMouse);
+        
+        // Clean up all tracked event listeners
+        removeAllEventListeners();
+        
+        // Exit pointer lock if active
+        if (document.pointerLockElement === display_element) {
+          document.exitPointerLock();
+        }
       }
 
       setupFakeCursor();
