@@ -395,6 +395,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
           plugin.jsPsych.pluginAPI.setTimeout(() => {
             if (redDot.parentNode) {
               display_element.removeChild(redDot);
+              score = 0;
             }
           }, 2000);
         }
