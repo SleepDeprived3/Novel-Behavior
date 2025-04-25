@@ -321,7 +321,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
         
         // Set up the red dot timing
         // between 2s and trialDuration - 1.25s
-        const redDotDelay = Math.round(Math.random() * (trialDuration - 3250)) + 2000;
+        const redDotDelay = Math.round(Math.random() * (trialDuration - 4000)) + 2000;
         
         // Set up disruption timing based on trial type
         if (trial.mouse_disruption_type === 3) {
