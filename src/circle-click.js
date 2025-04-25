@@ -36,7 +36,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
       const trialDuration = 10000; // 10s
       let circles = [];
       let trialRunning = true;
-      let score = trial.starting_score || 0;
+      let score = trial.starting_score;
       let redDotShown = false;
       let redDotClicked = false;
 
