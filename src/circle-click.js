@@ -396,6 +396,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
             if (redDot.parentNode) {
               display_element.removeChild(redDot);
               score = 0;
+              scoreCounter.innerText = `Score: ${score}`;
             }
           }, 2000);
         }
