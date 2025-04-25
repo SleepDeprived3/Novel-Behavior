@@ -50,7 +50,7 @@ var jsPsychCircleClickTask = (function (jspsych) {
       scoreCounter.style.right = "20px";
       scoreCounter.style.fontSize = "24px";
       scoreCounter.style.fontWeight = "bold";
-      scoreCounter.innerText = "Score: 0";
+      scoreCounter.innerText = `Score: ${score}`;
       display_element.appendChild(scoreCounter);
 
       function getRandomPosition() {
