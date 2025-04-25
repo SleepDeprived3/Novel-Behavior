@@ -39,7 +39,7 @@
       type: jsPsychHtmlKeyboardResponse,
       choices: [' '],
       stimulus: `<div style="display: flex; flex-direction: column; align-items: center; padding: 100px 100px 100px 100px;"><h1 style="font-size: 25px; text-align: left; align-self: flex-start;">Instructions</h1><p style="font-size: 16px; text-align: justify;">Your goal is to build your score by clicking on as many green circles on the screen as possible within 15-second intervals. Use your dominant hand to move your cursor across the and click on the circles. For each circle you click, you will gain one point, which will be added to your score at the upper-right corner of your screen. This point total will be cumulative, meaning that points collected during one trial will continue over to future trials. As the clicked circles disappear, more circles will appear in random positions across the screen. Continue clicking on circles and earning points until the 15-second interval has completed.</p><div style="display: flex; justify-content: center; align-items: center; margin-top: 80px;"><div style="border: 3px solid black; width: 300px; height: 200px; position: relative; display: flex; justify-content: center; align-items: center;"><h1 style="font-size: 45px; position: absolute; top: 10px; right: 15px;">0</h1><div style="height: 80px; width: 80px; border-radius: 50%; background-color: #6aa84f;"></div></div></div><p style="font-size: 20px; color: #6aa84f; padding-top: 50px; text-align: center;">Press (spacebar) to continue</p></div>`,
-      post_trial_gap: 1000
+      post_trial_gap: 200
     };
     timeline.push(introduction1);
 
@@ -48,7 +48,7 @@
       type: jsPsychHtmlKeyboardResponse,
       choices: [' '],
       stimulus: `<div style="display: flex; flex-direction: column; align-items: center; padding: 100px 100px 100px 100px;"><h1 style="font-size: 25px; text-align: left; align-self: flex-start;">Instructions</h1><p style="font-size: 16px; text-align: justify;">At some point during each 15-second interval, a red circle will appear briefly on the screen. If this circle is not clicked within 2 seconds, the red circle will disappear and your cumulative score will be reduced to 0. If the circle is clicked before it disappears, your cumulative score will not decrease.</p><p style="font-size: 16px; text-align: justify;">You may not have complete control over the mouse’s movement during some trials. Try your best and continue clicking on the circles.</p><div style="display: flex; justify-content: center; align-items: center; margin-top: 80px;"><div style="border: 3px solid black; width: 300px; height: 200px; position: relative; display: flex; justify-content: center; align-items: center;"><h1 style="font-size: 45px; position: absolute; top: 10px; right: 15px;">0</h1><div style="height: 80px; width: 80px; border-radius: 50%; background-color: #6aa84f; margin-right: 10px;"></div><div style="height: 80px; width: 80px; border-radius: 50%; background-color: #cc0000; margin-left: 10px;"></div></div></div><p style="font-size: 20px; color: #6aa84f; padding-top: 50px; text-align: center;">Press (spacebar) to continue</p></div>`,
-      post_trial_gap: 1000
+      post_trial_gap: 200
     };
     timeline.push(introduction2);
 
@@ -57,7 +57,7 @@
       type: jsPsychHtmlKeyboardResponse,
       choices: [' '],
       stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Instructions</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">After each trial, please rate how much control you believe you had over the mouse during the trial. The rating will be on a scale of 1 (no control) to 5 (complete control). Submit your rating by hitting the respective number on the number row of your keyboard.</p><p style="font-size:20px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
-      post_trial_gap: 1000
+      post_trial_gap: 200
     };
     timeline.push(introduction3);
 
@@ -66,7 +66,7 @@
       type: jsPsychHtmlKeyboardResponse,
       choices: [' '],
       stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Instructions</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">You are about to begin three, 15-second practice trials. Use this time to familiarize yourself with the interface and the scoring system.</p><p style="font-size:40px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
-      post_trial_gap: 1000
+      post_trial_gap: 200
     };
     timeline.push(introduction4);
 
@@ -75,7 +75,7 @@
       type: jsPsychHtmlKeyboardResponse,
       choices: [' '],
       stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Instructions</h1><p style="font-size:16px; padding-right:100px; padding-left:100px; padding-bottom:250px">You are about to begin a 60 trial testing period.</p><p style="font-size:40px; color:#6aa84fff; padding-top:50px; text-align:center">Press (spacebar) to continue</p></div>`,
-      post_trial_gap: 1000,
+      post_trial_gap: 200,
       on_finish: function() {
         lastScore = 0;  // Reset the score here
       }
@@ -86,18 +86,21 @@
       type: jsPsychHtmlKeyboardResponse,
       choices: ['1', '2', '3', '4', '5'],
       stimulus: `<div><h1 style="font-size:25px; text-align:left; margin:100px">Rating</h1><p style="font-size:16px; padding-right:100px; padding-left:10px; padding-bottom:10px">How much control over the cursor did you believe you had during the trial?</p><div style="display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-around; width:1200px; padding-bottom:-50px"><p style="font-size:35px">1</p><p style="font-size:35px">2</p><p style="font-size:35px">3</p><p style="font-size:35px">4</p><p style="font-size:35px">5</p></div><div style="display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-around; width:1200px; padding-top:-50px"><p style="font-size:35px; width:240px">(no control)</p><p style="font-size:35px; width:240px">(some control)</p><p style="font-size:35px; width:240px">(moderate control)</p><p style="font-size:35px; width:240px">(near-complete control)</p><p style="font-size:35px; width:240px">(complete control)</p></div></div>`,
-      post_trial_gap: 1000
+      post_trial_gap: 200,
+      data: {
+        task: 'rating'
+      }
     };
 
     /* Slide 10: Circle click task */
-    //20 trials each
+    //6 trials each
     
     let practiceTrialCounter = [1,2,3];
     
     let trialCounter = 
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-    3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3];
+    [1,1,1,1,1,1,
+    2,2,2,2,2,2,
+    3,3,3,3,3,3];
 
     const practiceTrialOrder = [];
     const trialOrder = [];
@@ -110,6 +113,9 @@
       on_finish: function(data) {
         lastScore = data.final_score;
       },
+      data: {
+        task: 'circles'
+      }
     };
     var circleTask2 = {
       type: jsPsychCircleClickTask,
@@ -118,6 +124,9 @@
       on_finish: function(data) {
         lastScore = data.final_score;
       },
+      data: {
+        task: 'circles'
+      }
     };
     var circleTask3 = {
       type: jsPsychCircleClickTask,
@@ -126,6 +135,9 @@
       on_finish: function(data) {
         lastScore = data.final_score;
       },
+      data: {
+        task: 'circles'
+      }
     };
 
     while (practiceTrialCounter.length > 0) {
@@ -141,6 +153,13 @@
       } else if (selectedIndexValue == 3) {
         practiceTrialOrder.push(circleTask3);
         practiceTrialOrder.push(rating);
+      }
+    }
+
+    const practice_phase = {
+      timeline: practiceTrialOrder,
+      data: {
+        phase: 'practice'
       }
     }
 
@@ -160,9 +179,16 @@
       }
     }
 
-    timeline.push(practiceTrialOrder);
+    const test_phase = {
+      timeline: trialOrder,
+      data: {
+        phase: 'test'
+      }
+    }
+
+    timeline.push(practice_phase);
     timeline.push(introduction5);
-    timeline.push(trialOrder);
+    timeline.push(test_phase);
 
     const save_data = {
       type: jsPsychPipe,
